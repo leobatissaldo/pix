@@ -1,5 +1,10 @@
 from fastapi import FastAPI
+import models
 
-app = FastAPI()
+app = FastAPI(title="Transações Pix")
 
-@app.get()
+models.Base.metadata.create_all(bind=engine)
+
+@app.get("/")
+def health_check():
+    return {"message": "ok", "status": 200}
