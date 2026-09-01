@@ -14,7 +14,7 @@ class Transação(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     horario = Column(DateTime, nullable=False)
-    valor = Column(Integer, nullable=False)
+    valor = Column(Float, nullable=False)
     conta_partida_id = Column(Integer, ForeignKey("conta.id"))
     conta_destino_id = Column(Integer, ForeignKey("conta.id"))
     

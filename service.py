@@ -3,7 +3,7 @@ from fastapi import Depends, HTTPException
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 from models import Conta
-from schemas import ContaInput
+from schemas import ContaInput, TransacaoInput
 
 class Conta_Service():
     def __init__(self, db: Session):
@@ -27,7 +27,7 @@ class Conta_Service():
             raise HTTPException(status_code=404, detail="Conta não encontrada")
 
     def buscar_conta(self, id: int):
-        conta_buscar = self.db.scalars(select(Conta).where(id == Conta.id))
+        conta_buscar = self.db.scalars(select(Conta).where(id == Conta.id)).first()
         if conta_buscar:
             return conta_buscar
         else:
@@ -36,3 +36,17 @@ class Conta_Service():
 class Transacao_Service():
     def __init__(self, db: Session):
         self.db = db
+
+    def realizar_transacao(self, input: TransacaoInput):
+        conta_origem = self.db.scalars(select(Conta).where(input.conta_origem_id == Conta.id)).first()
+        if conta_origem:
+            conta_destino = self.db.scalars(select(Conta).where(input.conta_destino_id == Conta.id)).first()
+            if conta_destino:
+                if input.valor > conta_origem.saldo: raise HTTPException(status_code=400)
+                conta_origem.saldo = conta_origem.saldo - input.valor
+                conta_destino.saldo = conta_destino.saldo + input.valor
+                return conta_destino
+            else:
+                raise HTTPException(status_code=404)
+        else:
+            raise HTTPException(status_code=404)
