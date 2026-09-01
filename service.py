@@ -26,6 +26,13 @@ class Conta_Service():
         else:
             raise HTTPException(status_code=404, detail="Conta não encontrada")
 
+    def buscar_conta(self, id: int):
+        conta_buscar = self.db.scalars(select(Conta).where(id == Conta.id))
+        if conta_buscar:
+            return conta_buscar
+        else:
+            raise HTTPException(status_code=404, detail="Conta não encontrada!")
+
 class Transacao_Service():
     def __init__(self, db: Session):
         self.db = db
