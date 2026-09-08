@@ -9,8 +9,11 @@ class Conta_Service():
     def __init__(self, db: Session):
         self.db = db
 
-    def criar_conta(self, input: ContaInput):
-        novo_usuario = Conta(nome_titular=input.nome, saldo=input.saldo)
+    def criar_conta(self, dados: ContaInput):
+        novo_usuario = Conta(
+            nome_titular=dados.nome, 
+            saldo=dados.saldo
+            )
         self.db.add(novo_usuario)
         self.db.commit()
         self.db.refresh(novo_usuario)
@@ -22,6 +25,7 @@ class Conta_Service():
             return {"message": "essa conta já esta desativada!"}
         elif conta_deletada.conta_ativa == True:
             conta_deletada.conta_ativa == False
+            self.db.commit()
             return {"message": "conta desativada com sucesso!"}
         else:
             raise HTTPException(status_code=404, detail="Conta não encontrada")

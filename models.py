@@ -7,10 +7,10 @@ class Conta(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     nome_titular = Column(String, nullable=False)
     saldo = Column(Float, nullable=False)
-    conta_ativa = Column(Boolean, nullable=False)
+    conta_ativa = Column(Boolean, nullable=False, default=True)
 
 class Transação(Base):
-    __table__ = "transacao"
+    __tablename__ = "transacao"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     horario = Column(DateTime, nullable=False)

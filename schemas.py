@@ -7,9 +7,9 @@ class ContaInput(BaseModel):
 
     @model_validator(mode="after")
     def validar_saldo(self):
-        if self.saldo <= 0:
+        if self.saldo <= 0.0:
             raise ValueError("O valor informado é incompativel")
-        return self.saldo
+        return self
 
 class ContaResponse(BaseModel):
     id: int
@@ -23,7 +23,7 @@ class TransacaoInput(BaseModel):
 
     @model_validator(mode="after")
     def validar_valor(self):
-        if self.valor <= 0:
+        if self.valor <= 0.0:
             raise ValueError("O valor informado é incompativel")
         return self
     
