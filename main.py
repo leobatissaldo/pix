@@ -1,9 +1,9 @@
 from fastapi import FastAPI, Depends
 from database import get_db, engine
 from sqlalchemy.orm import Session
-from schemas import ContaInput, ContaResponse
+from schemas import ContaInput, ContaResponse, TransacaoInput, TransacaoOutput
 from models import Conta
-from service import Conta_Service
+from service import Conta_Service, Transacao_Service
 import models
 
 app = FastAPI(title="Transações Pix")
@@ -18,3 +18,8 @@ def health_check():
 def adicionar_conta(dados:ContaInput, db: Session = Depends(get_db)):
     service = Conta_Service(db)
     return service.criar_conta(dados)
+
+@app.post("/transacao")
+def criar_transacao(dados: TransacaoInput, db: Session = Depends(get_db)):
+    service = Transacao_Service(db)
+    return service.realizar_transacao(dados)
