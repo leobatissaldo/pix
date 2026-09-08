@@ -19,6 +19,9 @@ class Conta_Service():
         self.db.refresh(novo_usuario)
         return novo_usuario
 
+    def listar(self):
+        return self.db.scalars(select(Conta)).all()
+
     def deletar_conta(self, id: int):
         conta_deletada = self.db.scalars(select(Conta).where(id == Conta.id)).first()
         if conta_deletada.conta_ativa == False:
@@ -49,6 +52,7 @@ class Transacao_Service():
                 if input.valor > conta_origem.saldo: raise HTTPException(status_code=400)
                 conta_origem.saldo = conta_origem.saldo - input.valor
                 conta_destino.saldo = conta_destino.saldo + input.valor
+                self.db.commit()
                 return conta_destino
             else:
                 raise HTTPException(status_code=404)
