@@ -24,6 +24,10 @@ def listar_contas(db: Session = Depends(get_db)):
    service = Conta_Service(db)
    return service.listar()
 
+@app.get("/contas/{id}")
+def buscar_conta(id: int, db: Session = Depends(get_db)):
+    service = Conta_Service(db)
+    return service.buscar_conta(id)
 
 
 @app.post("/transacao", response_model=TransacaoOutput)
