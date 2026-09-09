@@ -29,9 +29,18 @@ def buscar_conta(id: int, db: Session = Depends(get_db)):
     service = Conta_Service(db)
     return service.buscar_conta(id)
 
+@app.delete("/contas/{id}")
+def desativar_conta(id: int, db: Session = Depends(get_db)):
+    service = Conta_Service(db)
+    return service.desativar_conta(id)
 
-@app.post("/transacao", response_model=TransacaoOutput)
+
+@app.post("/transacao")
 def criar_transacao(dados: TransacaoInput, db: Session = Depends(get_db)):
     service = Transacao_Service(db)
     return service.realizar_transacao(dados)
 
+@app.get("/transacao/{id}")
+def buscar_transacao(id: int, db: Session = Depends(get_db)):
+    service = Transacao_Service(db)
+    return service.buscar_transacao(id)

@@ -1,5 +1,7 @@
+from datetime import datetime
 from database import Base
 from sqlalchemy import Column, String, Integer, Float, DateTime, ForeignKey, Boolean
+
 
 class Conta(Base):
     __tablename__ = "conta"
@@ -13,7 +15,7 @@ class Transação(Base):
     __tablename__ = "transacao"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    horario = Column(DateTime, nullable=False)
+    horario = Column(DateTime, nullable=False, default=datetime.now)
     valor = Column(Float, nullable=False)
     conta_partida_id = Column(Integer, ForeignKey("conta.id"))
     conta_destino_id = Column(Integer, ForeignKey("conta.id"))

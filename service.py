@@ -2,7 +2,7 @@ from database import get_db
 from fastapi import Depends, HTTPException
 from sqlalchemy import select
 from sqlalchemy.orm import Session
-from models import Conta
+from models import Conta, Transação
 from schemas import ContaInput, TransacaoInput
 
 class Conta_Service():
@@ -22,7 +22,7 @@ class Conta_Service():
     def listar(self):
         return self.db.scalars(select(Conta)).all()
 
-    def deletar_conta(self, id: int):
+    def desativar_conta(self, id: int):
         conta_deletada = self.db.scalars(select(Conta).where(id == Conta.id)).first()
         if conta_deletada.conta_ativa == False:
             return {"message": "essa conta já esta desativada!"}
@@ -52,9 +52,23 @@ class Transacao_Service():
                 if input.valor > conta_origem.saldo: raise HTTPException(status_code=400)
                 conta_origem.saldo = conta_origem.saldo - input.valor
                 conta_destino.saldo = conta_destino.saldo + input.valor
+                transacao = Transação(
+                    valor=input.valor,
+                    conta_partida_id=input.conta_origem_id,
+                    conta_destino_id=input.conta_destino_id
+                )
+                self.db.add(transacao)
                 self.db.commit()
-                return conta_destino
+                self.db.refresh(transacao)
+                return transacao
             else:
                 raise HTTPException(status_code=404)
         else:
             raise HTTPException(status_code=404)
+
+    def buscar_transacao(self, id: int):
+        transacao = self.db.scalars(select(Transação).where(Transação.id == id)).first()
+        if transacao:
+            return transacao
+        else:
+            raise HTTPException(status_code=404, detail="Transação não encontrada!")
