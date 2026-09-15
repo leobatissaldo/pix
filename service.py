@@ -3,8 +3,8 @@ from fastapi import Depends, HTTPException
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 from models import Conta, Transação
-from schemas import ContaInput, TransacaoInput
-from auth import gerar_hash
+from schemas import ContaInput, TransacaoInput, ContaLoginInput
+from auth import gerar_hash, verificar_hash, criar_token
 
 class Conta_Service():
     def __init__(self, db: Session):
@@ -75,3 +75,18 @@ class Transacao_Service():
             return transacao
         else:
             raise HTTPException(status_code=404, detail="Transação não encontrada!")
+
+
+class Login_Service():
+    def __init__(self, db: Session):
+        self.db = db
+
+    def login(self, input: ContaLoginInput):
+        usuario = self.db.scalars(select(Conta).where(input.email == Conta.email)).first()
+        if usuario.email:
+            if verificar_hash(input.senha, usuario.senha_hash):
+                return criar_token(usuario.id)
+            else:
+                raise HTTPException(status_code=400, detail="Senha incorreta")
+        else:
+            raise HTTPException(status_code=404, detail="email não encontrado")
