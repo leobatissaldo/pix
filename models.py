@@ -10,6 +10,8 @@ class Conta(Base):
     nome_titular = Column(String, nullable=False)
     saldo = Column(Float, nullable=False)
     conta_ativa = Column(Boolean, nullable=False, default=True)
+    email = Column(String, nullable=False, unique=True)
+    senha_hash = Column(String, nullable=False)
 
 class Transação(Base):
     __tablename__ = "transacao"
