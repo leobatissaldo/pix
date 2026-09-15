@@ -44,3 +44,7 @@ def criar_transacao(dados: TransacaoInput, db: Session = Depends(get_db)):
 def buscar_transacao(id: int, db: Session = Depends(get_db)):
     service = Transacao_Service(db)
     return service.buscar_transacao(id)
+
+@app.post("/login")
+def realizar_login(db: Session = Depends(get_db)):
+    
