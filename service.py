@@ -4,6 +4,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 from models import Conta, Transação
 from schemas import ContaInput, TransacaoInput
+from auth import gerar_hash
 
 class Conta_Service():
     def __init__(self, db: Session):
@@ -11,7 +12,9 @@ class Conta_Service():
 
     def criar_conta(self, dados: ContaInput):
         novo_usuario = Conta(
-            nome_titular=dados.nome, 
+            nome_titular=dados.nome,
+            email=dados.email,
+            senha=gerar_hash(dados.senha),
             saldo=dados.saldo
             )
         self.db.add(novo_usuario)

@@ -3,6 +3,8 @@ from datetime import datetime
 
 class ContaInput(BaseModel):
     nome: str
+    email: str
+    senha: str
     saldo: float
 
     @model_validator(mode="after")
@@ -37,3 +39,6 @@ class TransacaoOutput(BaseModel):
     conta_destino_id: int
     valor: float
 
+class ContaLoginInput(BaseModel):
+    email: str
+    senha: str

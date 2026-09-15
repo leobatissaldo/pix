@@ -1,7 +1,8 @@
 from fastapi import FastAPI, Depends
 from database import get_db, engine
 from sqlalchemy.orm import Session
-from schemas import ContaInput, ContaResponse, TransacaoInput, TransacaoOutput
+from sqlalchemy import select
+from schemas import ContaInput, ContaResponse, TransacaoInput, TransacaoOutput, ContaLoginInput
 from models import Conta
 from service import Conta_Service, Transacao_Service
 import models
@@ -45,6 +46,8 @@ def buscar_transacao(id: int, db: Session = Depends(get_db)):
     service = Transacao_Service(db)
     return service.buscar_transacao(id)
 
-@app.post("/login")
-def realizar_login(db: Session = Depends(get_db)):
-    
+# @app.post("/login")
+# def realizar_login(input: ContaLoginInput, db: Session = Depends(get_db)):
+#     email = db.scalars(select(Conta).where(input.email == Conta.email))
+#     if email:
+#         senha_hash = 

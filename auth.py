@@ -7,9 +7,13 @@ from sqlalchemy.orm import Session
 from sqlalchemy import select
 
 oauth_scheme = OAuth2AuthorizationCodeBearer(tokenUrl="login")
+pwd_context = CryptContext(["sha256_crypt"])
 
-def get_usuario_atual(db: Session = Depends(get_db)):
-    usuario_atual = db.scalars(select(Conta).where())
+# def get_usuario_atual(db: Session = Depends(get_db)):
+#     usuario_atual = db.scalars(select(Conta).where())
 
-
+def gerar_hash(senha):
+    senha_hash = pwd_context.hash(senha)
+    return senha_hash 
+    
 
