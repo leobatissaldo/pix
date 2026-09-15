@@ -14,7 +14,7 @@ class Conta_Service():
         novo_usuario = Conta(
             nome_titular=dados.nome,
             email=dados.email,
-            senha=gerar_hash(dados.senha),
+            senha_hash=gerar_hash(dados.senha),
             saldo=dados.saldo
             )
         self.db.add(novo_usuario)
